@@ -1,0 +1,15 @@
+{
+  "test_accuracy": 0.546448087431694,
+  "macro_f1": 0.5388733357496972,
+  "classes": [
+    "Atopic Dermatitis",
+    "Contact Dermatitis",
+    "Eczema",
+    "Scabies",
+    "Seborrheic Dermatitis",
+    "Tinea Corporis"
+  ],
+  "train_images": 1168,
+  "validation_images": 267,
+  "test_images": 366
+}

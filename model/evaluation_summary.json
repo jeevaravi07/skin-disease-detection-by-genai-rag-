@@ -1,0 +1,31 @@
+
+{
+  "image_count": 420,
+  "classes": [
+    "Atopic Dermatitis",
+    "Contact Dermatitis",
+    "Eczema",
+    "Scabies",
+    "Seborrheic Dermatitis",
+    "Tinea Corporis"
+  ],
+  "split_method": "patient-level stratified group split",
+  "patient_overlap_free": true,
+  "train_count": 251,
+  "validation_count": 85,
+  "test_count": 84,
+  "test_accuracy": 0.87,
+  "test_loss": 1.6568063497543335,
+  "macro_f1": 0.32771710499478196,
+  "roc_auc_ovr": {
+    "Atopic Dermatitis": 0.563265306122449,
+    "Contact Dermatitis": 0.5214285714285714,
+    "Eczema": 0.7571428571428571,
+    "Scabies": 0.8979591836734694,
+    "Seborrheic Dermatitis": 0.8306122448979592,
+    "Tinea Corporis": 0.6826530612244899
+  },
+  "model_path": "C:\\Users\\DELL\\Desktop\\skin-disease-genai\\outputs\\skin_disnet_efficientnetb0.keras",
+  "elapsed_seconds": 235.2,
+  "note": "Research/demo only; not a confirmed diagnosis. Accuracy must be verified from actual test predictions."
+}

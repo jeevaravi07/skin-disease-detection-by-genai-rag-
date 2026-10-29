@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DermaAI - Intelligent Skin Health & Screening{% endblock %}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0a0f1d',
+                        cardbg: 'rgba(17, 24, 39, 0.75)',
+                        borderglow: 'rgba(56, 189, 248, 0.2)',
+                        accent: '#06b6d4',
+                        accenthover: '#0891b2'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body, .glass-panel, header, footer {
+            transition: background-color .25s, color .25s, border-color .25s;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .glow-accent {
+            box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.3);
+        }
+        #themeToggle {
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            background: transparent;
+            color: inherit;
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* ---------- Light mode overrides ---------- */
+        html[data-theme="light"] body { background-color: #f1f5f9 !important; color: #0f172a !important; }
+        html[data-theme="light"] .glass-panel { background: rgba(255, 255, 255, 0.85) !important; border-color: #e2e8f0 !important; box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.08) !important; }
+        html[data-theme="light"] .bg-darkbg { background-color: #f1f5f9 !important; }
+
+        html[data-theme="light"] .text-white,
+        html[data-theme="light"] .text-slate-200 { color: #0f172a !important; }
+        html[data-theme="light"] .text-slate-300 { color: #334155 !important; }
+        html[data-theme="light"] .text-slate-400,
+        html[data-theme="light"] .text-slate-500 { color: #64748b !important; }
+
+        html[data-theme="light"] .border-slate-700,
+        html[data-theme="light"] .border-slate-800 { border-color: #e2e8f0 !important; }
+        html[data-theme="light"] .bg-slate-700,
+        html[data-theme="light"] .bg-slate-800\/40,
+        html[data-theme="light"] .bg-slate-800\/60,
+        html[data-theme="light"] .bg-slate-900\/80,
+        html[data-theme="light"] .bg-slate-900\/90 { background-color: #eef2f7 !important; color: #0f172a !important; }
+
+        html[data-theme="light"] .bg-cyan-950\/40,
+        html[data-theme="light"] .bg-cyan-950\/50,
+        html[data-theme="light"] .bg-cyan-950\/60,
+        html[data-theme="light"] .bg-cyan-950\/80,
+        html[data-theme="light"] .bg-cyan-900\/60 { background-color: #ecfeff !important; }
+        html[data-theme="light"] .text-cyan-200,
+        html[data-theme="light"] .text-cyan-300,
+        html[data-theme="light"] .text-cyan-400 { color: #0e7490 !important; }
+        html[data-theme="light"] .border-cyan-400,
+        html[data-theme="light"] .border-cyan-500\/30,
+        html[data-theme="light"] .border-cyan-500\/40,
+        html[data-theme="light"] .border-cyan-800,
+        html[data-theme="light"] .border-cyan-800\/50 { border-color: #a5f3fc !important; }
+
+        html[data-theme="light"] .bg-teal-950\/60 { background-color: #f0fdfa !important; }
+        html[data-theme="light"] .text-teal-300,
+        html[data-theme="light"] .text-teal-400 { color: #0f766e !important; }
+        html[data-theme="light"] .border-teal-500\/30,
+        html[data-theme="light"] .border-teal-800 { border-color: #99f6e4 !important; }
+
+        html[data-theme="light"] .bg-emerald-950\/50,
+        html[data-theme="light"] .bg-emerald-950\/60,
+        html[data-theme="light"] .bg-emerald-950\/80 { background-color: #ecfdf5 !important; }
+        html[data-theme="light"] .text-emerald-200,
+        html[data-theme="light"] .text-emerald-400 { color: #047857 !important; }
+        html[data-theme="light"] .border-emerald-500\/30,
+        html[data-theme="light"] .border-emerald-800 { border-color: #a7f3d0 !important; }
+
+        html[data-theme="light"] .bg-amber-950\/50,
+        html[data-theme="light"] .bg-amber-950\/20 { background-color: #fffbeb !important; }
+        html[data-theme="light"] .text-amber-200,
+        html[data-theme="light"] .text-amber-400 { color: #b45309 !important; }
+        html[data-theme="light"] .border-amber-800,
+        html[data-theme="light"] .border-amber-900\/40 { border-color: #fde68a !important; }
+
+        html[data-theme="light"] .bg-rose-950\/30,
+        html[data-theme="light"] .bg-rose-950\/50 { background-color: #fff1f2 !important; }
+        html[data-theme="light"] .text-rose-200,
+        html[data-theme="light"] .text-rose-400 { color: #be123c !important; }
+        html[data-theme="light"] .border-rose-800,
+        html[data-theme="light"] .border-rose-900\/40 { border-color: #fecdd3 !important; }
+    </style>
+</head>
+<body class="bg-darkbg text-slate-200 min-h-screen flex flex-col font-sans selection:bg-cyan-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo -->
+                <a href="{{ url_for('index') }}" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-microscope text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold tracking-tight text-white group-hover:text-cyan-400 transition-colors">Derma<span class="text-cyan-400">AI</span></span>
+                        <span class="hidden sm:inline-block text-[10px] px-1.5 py-0.5 ml-2 font-semibold uppercase tracking-wider bg-cyan-950/80 text-cyan-300 border border-cyan-800 rounded">Screening + Gen Ai</span>
+                    </div>
+                </a>
+
+                <!-- Navigation Links -->
+                <nav class="flex items-center gap-2 sm:gap-4 text-sm font-medium">
+                    <a href="{{ url_for('index') }}" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors">Home</a>
+                    <a href="{{ url_for('about') }}" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors">About</a>
+                    <button id="themeToggle" type="button" aria-label="Toggle light / dark mode">🌙 Dark</button>
+
+                    {% if session.get('user_id') %}
+                        <a href="{{ url_for('prediction') }}" class="px-3 py-1.5 rounded-lg text-cyan-400 bg-cyan-950/40 border border-cyan-800/50 hover:bg-cyan-900/60 transition-colors">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i>Prediction
+                        </a>
+                        <div class="h-4 w-px bg-slate-700 mx-1"></div>
+                        <span class="text-slate-400 hidden sm:inline"><i class="fa-solid fa-user-circle mr-1"></i>{{ session.get('username') }}</span>
+                        <a href="{{ url_for('logout') }}" class="px-3 py-1.5 rounded-lg text-rose-400 hover:bg-rose-950/30 border border-rose-900/40 transition-colors">
+                            <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i>Logout
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors">Login</a>
+                        <a href="{{ url_for('register') }}" class="px-4 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold shadow-md shadow-cyan-500/25 transition-all">Register</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Flash Notifications Container -->
+    <div class="max-w-4xl mx-auto px-4 mt-4 w-full">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-3 px-4 py-3 rounded-xl border flex items-center gap-3 text-sm {% if category == 'danger' %}bg-rose-950/50 text-rose-200 border-rose-800{% elif category == 'success' %}bg-emerald-950/50 text-emerald-200 border-emerald-800{% elif category == 'warning' %}bg-amber-950/50 text-amber-200 border-amber-800{% else %}bg-cyan-950/50 text-cyan-200 border-cyan-800{% endif %}">
+                        <i class="fa-solid {% if category == 'danger' %}fa-circle-exclamation{% elif category == 'success' %}fa-circle-check{% elif category == 'warning' %}fa-triangle-exclamation{% else %}fa-circle-info{% endif %}"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Dynamic Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-slate-800 mt-16 py-8 text-center text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col items-center gap-2">
+            <p class="font-medium text-slate-300">DermaAI &copy; Screening &amp; Medical Knowledge Retrieval Project</p>
+            <p class="max-w-2xl text-slate-500 leading-relaxed">
+                Educational research platform only. This application does not provide confirmed clinical diagnoses, prescription guidelines, or definitive medical opinions. Always consult a qualified dermatologist for in-person evaluations.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Light / dark mode toggle, shared across every page (same storage key as prediction.html).
+        (function () {
+            var toggle = document.getElementById('themeToggle');
+            var root = document.documentElement;
+
+            function apply(theme) {
+                if (theme === 'light') {
+                    root.setAttribute('data-theme', 'light');
+                } else {
+                    root.removeAttribute('data-theme');
+                }
+                if (toggle) toggle.textContent = theme === 'light' ? '☀️ Light' : '🌙 Dark';
+            }
+
+            var saved = 'dark';
+            try { saved = localStorage.getItem('dermaai-theme') || 'dark'; } catch (e) {}
+            apply(saved);
+
+            if (toggle) {
+                toggle.addEventListener('click', function () {
+                    var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                    apply(next);
+                    try { localStorage.setItem('dermaai-theme', next); } catch (e) {}
+                });
+            }
+        })();
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

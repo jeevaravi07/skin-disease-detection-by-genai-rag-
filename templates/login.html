@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - DermaAI{% endblock %}
+
+{% block content %}
+
+<!-- 3D Flip Stage: title shown first, flips in 3D to reveal the sign-in form on scroll/key/click -->
+<div id="flip-stage" class="relative overflow-hidden" style="height: calc(100vh - 4rem); perspective: 1800px;">
+    <div id="flip-card" class="relative w-full h-full transition-transform duration-[1100ms] ease-[cubic-bezier(0.645,0.045,0.355,1)]" style="transform-style: preserve-3d;">
+
+        <!-- Front face: big title only -->
+        <section id="splash-hero" class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center cursor-pointer select-none"
+            style="backface-visibility: hidden; -webkit-backface-visibility: hidden; z-index: 2;">
+            <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[32rem] h-[32rem] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-tight relative z-10">
+                Skin Disease Detection <br class="hidden sm:inline" />
+                <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">using Gen AI</span>
+            </h1>
+        </section>
+
+        <!-- Back face: sign-in form -->
+        <div id="login-form-section" class="absolute inset-0 flex items-center justify-center px-4 py-12 overflow-y-auto"
+            style="backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateY(180deg); z-index: 1; pointer-events: none;">
+            <div class="glass-panel w-full max-w-md p-8 rounded-2xl border border-slate-800 glow-accent">
+                <div class="text-center mb-8">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-950/80 border border-cyan-800 flex items-center justify-center text-cyan-400 mb-3 shadow-lg">
+                        <i class="fa-solid fa-lock text-xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white tracking-tight">Sign In to DermaAI</h2>
+                    <p class="text-xs text-slate-400 mt-1">Enter your credentials to access the diagnosis console</p>
+                </div>
+
+                <form action="{{ url_for('login') }}" method="POST" class="space-y-5">
+                    <div>
+                        <label for="username" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Username</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input type="text" id="username" name="username" required
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition"
+                                placeholder="e.g. skinresearcher">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+                                <i class="fa-solid fa-key"></i>
+                            </span>
+                            <input type="password" id="password" name="password" required
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition"
+                                placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full py-3 rounded-xl font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-md shadow-cyan-500/20 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Authenticate
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center text-xs text-slate-400">
+                    Don't have an account yet?
+                    <a href="{{ url_for('register') }}" class="text-cyan-400 hover:underline font-semibold ml-1">Create one</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    (function () {
+        var stage = document.getElementById('flip-stage');
+        var card = document.getElementById('flip-card');
+        var splash = document.getElementById('splash-hero');
+        var loginSection = document.getElementById('login-form-section');
+        var flipped = false;
+
+        function flipToLogin() {
+            if (flipped) return;
+            flipped = true;
+            card.style.transform = 'rotateY(180deg)';
+            stage.style.overflow = 'visible';
+            // Hand off interaction to the form and stop the title face from
+            // intercepting clicks/focus once it has rotated out of view.
+            splash.style.pointerEvents = 'none';
+            loginSection.style.pointerEvents = 'auto';
+        }
+
+        splash.addEventListener('click', flipToLogin);
+        window.addEventListener('wheel', function (e) {
+            if (!flipped && e.deltaY > 0) flipToLogin();
+        }, { passive: true });
+        window.addEventListener('touchmove', function () {
+            if (!flipped) flipToLogin();
+        }, { passive: true });
+        window.addEventListener('keydown', function (e) {
+            if (!flipped && e.key === 'Enter') flipToLogin();
+        });
+    })();
+</script>
+{% endblock %}

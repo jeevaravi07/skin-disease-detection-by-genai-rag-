@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Home - DermaAI Multimodal Screening{% endblock %}
+
+{% block content %}
+<section class="relative overflow-hidden py-16 sm:py-24">
+    <!-- Background Glow Blobs -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-950/60 text-cyan-300 border border-cyan-800 mb-6">
+            <i class="fa-solid fa-brain"></i> Deep Learning CNN + Generative AI
+        </span>
+
+        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight mb-6">
+            Intelligent Skin Screening <br class="hidden sm:inline" />
+            <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">Grounded in Medical Knowledge</span>
+        </h1>
+
+        <p class="max-w-2xl mx-auto text-base sm:text-lg text-slate-400 mb-10 leading-relaxed">
+            Upload dermatological skin imagery for automated deep feature classification, receive structured explanations synthesized from verified medical files via local LLMs, and locate certified nearby specialists.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4">
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('prediction') }}" class="px-8 py-3.5 rounded-xl font-bold bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-950 shadow-lg shadow-cyan-500/30 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-play"></i> Launch Screening Console
+                </a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="px-8 py-3.5 rounded-xl font-bold bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-950 shadow-lg shadow-cyan-500/30 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus"></i> Get Started
+                </a>
+                <a href="{{ url_for('login') }}" class="px-8 py-3.5 rounded-xl font-semibold glass-panel text-slate-200 hover:text-white hover:border-cyan-500/40 transition-all">
+                    Sign In
+                </a>
+            {% endif %}
+            <a href="{{ url_for('about') }}" class="px-6 py-3.5 rounded-xl font-semibold text-slate-300 hover:text-white hover:bg-slate-800/40 transition-colors">
+                Read Documentation &rarr;
+            </a>
+        </div>
+
+        <!-- Metric / Feature Highlights -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-20 text-left">
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-colors">
+                <div class="w-12 h-12 rounded-xl bg-cyan-950/60 border border-cyan-800 flex items-center justify-center text-cyan-400 mb-4 text-xl">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">CNN Classification</h3>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    Custom-trained deep neural architecture performing multi-class probability scoring on input dermoscopic scans.
+                </p>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-teal-500/30 transition-colors">
+                <div class="w-12 h-12 rounded-xl bg-teal-950/60 border border-teal-800 flex items-center justify-center text-teal-400 mb-4 text-xl">
+                    <i class="fa-solid fa-book-medical"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Generative AI</h3>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    AI-generated explanations summarize each detected condition in clear, patient-friendly language grounded in trusted medical knowledge.
+                </p>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-emerald-500/30 transition-colors">
+                <div class="w-12 h-12 rounded-xl bg-emerald-950/60 border border-emerald-800 flex items-center justify-center text-emerald-400 mb-4 text-xl">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">PIN Code Care Finder</h3>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    Direct integration mapping postal codes and geographic identifiers to nearby accredited dermatologists and skin clinics.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

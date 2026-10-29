@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}About - DermaAI Architecture & Generative AI Screening{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-14">
+    <!-- Header -->
+    <div class="text-center space-y-4">
+        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-cyan-400 px-3 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-800">
+            <i class="fa-solid fa-diagram-project"></i>
+            Multimodal GenAI Architecture
+        </span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Behind DermaAI Multimodal Generative AI Screening</h1>
+        <p class="max-w-2xl mx-auto text-sm text-slate-400 leading-relaxed">
+            A comprehensive look at our three-tier pipeline combining deep-learning vision, ChromaDB vector retrieval, and a local generative AI model to turn a single photo into a grounded, plain-language explanation.
+        </p>
+    </div>
+
+    <!-- 3-Tier Workflow Grid -->
+    <div class="relative grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Step 1: CNN -->
+        <div class="group glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-cyan-700/60 hover:-translate-y-1 transition-all duration-200">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-11 h-11 rounded-xl bg-cyan-950/70 border border-cyan-800/60 flex items-center justify-center text-cyan-400 text-lg group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>
+                    <span class="text-cyan-400 font-mono text-xl font-black opacity-70">01</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Deep Feature Extraction</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Uploaded RGB skin lesion photos are normalized, resized to 224&times;224, and passed through a deep CNN to extract visual characteristics and evaluate class scores.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500 font-mono flex items-center gap-2">
+                <i class="fa-solid fa-microchip"></i>TensorFlow / Keras CNN Vision
+            </div>
+        </div>
+
+        <!-- Step 2: RAG Vector Store -->
+        <div class="group glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-teal-700/60 hover:-translate-y-1 transition-all duration-200">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-11 h-11 rounded-xl bg-teal-950/70 border border-teal-800/60 flex items-center justify-center text-teal-400 text-lg group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <span class="text-teal-400 font-mono text-xl font-black opacity-70">02</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Vector RAG Retrieval</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Using <code class="text-cyan-300">nomic-embed-text</code>, verified clinical references are chunked into dense embeddings indexed in ChromaDB for factual grounding.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500 font-mono flex items-center gap-2">
+                <i class="fa-solid fa-layer-group"></i>ChromaDB Vector Retrieval
+            </div>
+        </div>
+
+        <!-- Step 3: GenAI Local LLM -->
+        <div class="group glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-emerald-700/60 hover:-translate-y-1 transition-all duration-200">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-950/70 border border-emerald-800/60 flex items-center justify-center text-emerald-400 text-lg group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-sparkles"></i>
+                    </div>
+                    <span class="text-emerald-400 font-mono text-xl font-black opacity-70">03</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Generative AI (GenAI) Synthesis</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    A localized GenAI language model (<code class="text-teal-300">llama3.2:3b</code>) synthesizes the retrieved medical facts into plain-language explanations and general precautions.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500 font-mono flex items-center gap-2">
+                <i class="fa-solid fa-server"></i>Local GenAI / Ollama Backend
+            </div>
+        </div>
+    </div>
+
+    <!-- Why this matters -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="glass-panel p-5 rounded-xl border border-slate-800 flex items-start gap-3">
+            <div class="w-9 h-9 flex-none rounded-lg bg-cyan-950/70 border border-cyan-800/60 flex items-center justify-center text-cyan-400"><i class="fa-solid fa-shield-halved"></i></div>
+            <div>
+                <h4 class="text-sm font-bold text-white mb-1">Grounded, not guessed</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Explanations are built from retrieved clinical references, not freeform model memory.</p>
+            </div>
+        </div>
+        <div class="glass-panel p-5 rounded-xl border border-slate-800 flex items-start gap-3">
+            <div class="w-9 h-9 flex-none rounded-lg bg-teal-950/70 border border-teal-800/60 flex items-center justify-center text-teal-400"><i class="fa-solid fa-lock"></i></div>
+            <div>
+                <h4 class="text-sm font-bold text-white mb-1">Runs locally</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Vision, retrieval, and generation all run on-device via Ollama &mdash; no image leaves your machine.</p>
+            </div>
+        </div>
+        <div class="glass-panel p-5 rounded-xl border border-slate-800 flex items-start gap-3">
+            <div class="w-9 h-9 flex-none rounded-lg bg-emerald-950/70 border border-emerald-800/60 flex items-center justify-center text-emerald-400"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div>
+                <h4 class="text-sm font-bold text-white mb-1">Educational by design</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Built to demonstrate a screening pipeline, not to replace clinical diagnosis.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clinical Ethics & Legal Section -->
+    <div class="glass-panel p-8 rounded-2xl border border-amber-900/40 bg-gradient-to-br from-slate-900/90 to-amber-950/20 space-y-4">
+        <div class="flex items-center gap-3 text-amber-400">
+            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            <h2 class="text-lg font-bold text-white">Responsible Generative AI &amp; Clinical Disclaimers</h2>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            DermaAI is intended strictly for educational research, algorithmic benchmarking, and preliminary health information. An artificial intelligence system or generative language model cannot replicate a biopsy, dermoscopic exam, or clinical staging performed by an accredited dermatologist. Never delay professional medical consultation, disregard physician guidance, or commence/discontinue prescription therapies based on predictions or GenAI explanations rendered by this software.
+        </p>
+    </div>
+</div>
+{% endblock %}
