@@ -24,38 +24,19 @@ except ImportError:
     tf = None
 
 
-# ============================================================
 # CONFIGURATION
-# ============================================================
-
 BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_FOLDER = BASE_DIR / "static" / "uploads"
 UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 DB_PATH = BASE_DIR / "database.db"
 
-# Expected model files:
-# outputs/skin_disnet_final.keras
-# outputs/class_names.json
+
 MODEL_PATH = BASE_DIR / "outputs" / "skin_disnet_final.keras"
 CLASS_NAMES_PATH = BASE_DIR / "outputs" / "class_names.json"
 
-# Optional fallback: dataset folder with one subfolder per disease.
-# Example:
-# dataset/
-#   Atopic Dermatitis/
-#   Contact Dermatitis/
-#   Eczema/
-#   Scabies/
-#   Seborrheic Dermatitis/
-#   Tinea Corporis/
-#
-# Use this fallback ONLY if the model was trained with the same class
-# ordering (normally alphabetical, as with flow_from_directory).
 DATASET_DIR = BASE_DIR / "dataset"
 
 IMG_SIZE = (224, 224)
-# Set to True ONLY if training divided pixel values by 255.
-# If your training pipeline used raw 0..255 pixels, keep False.
 NORMALIZE_TO_0_1 = False
 
 OLLAMA_URL = "http://localhost:11434"
@@ -86,10 +67,7 @@ CLASS_NAMES = None
 CHROMA_COLLECTION = None
 
 
-# ============================================================
 # DATABASE / AUTHENTICATION
-# ============================================================
-
 def get_db():
     conn = sqlite3.connect(str(DB_PATH))
     conn.row_factory = sqlite3.Row
@@ -108,7 +86,6 @@ def init_db():
             )
         """)
         conn.commit()
-
 
 init_db()
 
@@ -131,10 +108,7 @@ def allowed_file(filename):
     )
 
 
-# ============================================================
 # CLASS LABELS: MODEL INDEX -> DATASET FOLDER NAME
-# ============================================================
-
 def read_class_names_file(path):
     """Read list or index-to-name dictionary saved during model training."""
     with open(path, "r", encoding="utf-8") as file:
@@ -186,7 +160,6 @@ def load_ai_model():
     model_path = MODEL_PATH
     classes_path = CLASS_NAMES_PATH
 
-    # Support files placed beside app.py as an alternative.
     if not model_path.is_file() and (BASE_DIR / "skin_disnet_final.keras").is_file():
         model_path = BASE_DIR / "skin_disnet_final.keras"
     if not classes_path.is_file() and (BASE_DIR / "class_names.json").is_file():
@@ -212,7 +185,6 @@ def load_ai_model():
 
     model = tf.keras.models.load_model(str(model_path), compile=False)
 
-    # Verify output layer and labels agree.
     output_shape = model.output_shape
     if isinstance(output_shape, list):
         raise ValueError("This app expects a single-output classification model.")
@@ -231,10 +203,7 @@ def load_ai_model():
     return MODEL, CLASS_NAMES
 
 
-# ============================================================
 # IMAGE PREPROCESSING AND PREDICTION
-# ============================================================
-
 def preprocess_image(image_path):
     """Resize and preprocess consistently with the training pipeline."""
     with Image.open(image_path) as source:
@@ -265,14 +234,10 @@ def predict_disease(image_path):
     disease_folder_name = class_names[index]
     raw_score = float(scores[index])
 
-    # This is the model's output score, not a medically calibrated probability.
     return disease_folder_name, raw_score, index
 
 
-# ============================================================
 # OLLAMA + RAG
-# ============================================================
-
 def split_text(text, chunk_size=CHUNK_CHARS, overlap=CHUNK_OVERLAP):
     text = " ".join(text.split())
     chunks = []
@@ -459,11 +424,7 @@ Write a clear answer with plain-text section headings. Do NOT use Markdown: no a
         answer += "\n\nReference files used: " + ", ".join(sources)
     return clean_genai_formatting(answer)
 
-
-# ============================================================
 # PAGES
-# ============================================================
-
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -546,10 +507,7 @@ def prediction():
     return render_template("prediction.html", class_names=class_names)
 
 
-# ============================================================
 # IMAGE PREDICTION API
-# ============================================================
-
 @app.route("/api/predict", methods=["POST"])
 @login_required
 def api_predict():
@@ -573,8 +531,6 @@ def api_predict():
             "error": "Unsupported image type. Upload PNG, JPG, JPEG, WEBP, or BMP."
         }), 400
 
-    # Sent by frontend from File.webkitRelativePath. Do not trust this as a path
-    # to read from disk; use it only to identify one of the known class names.
     relative_path = (
         request.form.get("relative_path", "")
         or request.headers.get("X-Relative-Path", "")
@@ -585,8 +541,6 @@ def api_predict():
     except Exception as exc:
         return jsonify({"success": False, "error": f"Model/class labels unavailable: {exc}"}), 500
 
-    # Find a known class name among path components, case-insensitively.
-    # This supports paths like 'dataset/Contact Dermatitis/image.jpg'.
     path_parts = [part.strip() for part in relative_path.split("/") if part.strip()]
     known_by_lower = {name.casefold(): name for name in class_names}
     folder_disease = None
@@ -617,8 +571,6 @@ def api_predict():
         with Image.open(save_path) as check_image:
             check_image.verify()
 
-        # Keep CNN prediction separate for evaluation/debugging. It does NOT
-        # override the selected dataset folder label shown to the user.
         cnn_disease, cnn_score, cnn_index = predict_disease(str(save_path))
 
         if cnn_score >= 0.80:
@@ -629,8 +581,6 @@ def api_predict():
             indicator = "Low model output score — CNN prediction is uncertain"
 
         try:
-            # IMPORTANT: GenAI/RAG explanation is generated for the folder label,
-            # not for the CNN's potentially different prediction.
             explanation = generate_genai_explanation(folder_disease, cnn_score)
         except Exception as exc:
             explanation = (
@@ -664,10 +614,7 @@ def api_predict():
         return jsonify({"success": False, "error": str(exc)}), 500
 
 
-# ============================================================
 # DERMATOLOGIST FINDER
-# ============================================================
-
 @app.route("/api/nearby-dermatologists", methods=["GET"])
 @login_required
 def nearby_dermatologists():
@@ -702,10 +649,8 @@ def map_page():
         dermatologist_url=dermatologist_url, skin_hospital_url=skin_hospital_url,
         general_hospital_url=general_hospital_url)
 
-# ============================================================
-# HEALTH / DEBUG ENDPOINT
-# ============================================================
 
+# HEALTH / DEBUG ENDPOINT
 @app.route("/api/model-status", methods=["GET"])
 def model_status():
     try:
@@ -733,5 +678,4 @@ if __name__ == "__main__":
         print(f"[WARNING] Model was not loaded at startup: {exc}")
         print("Check MODEL_PATH, CLASS_NAMES_PATH, and your TensorFlow installation.")
 
-    # Keep debug=False outside local development.
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    app.run(debug=True, host="128.0.0.1", port=8000)
